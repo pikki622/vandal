@@ -110,20 +110,31 @@ class EOQ:
         '''
 
         if filtered == False:
-            print(Fore.GREEN + 'EOQ has been set up with annual demand quantity of ' + Fore.RESET + f'{self.annual_demand_quantity}' + Fore.GREEN + ' pieces, fixed cost of the order of ' + Fore.RESET + f'{self.order_fixed_cost}' + Fore.GREEN + ' and with the annual holding cost of ' + Fore.RESET + f'{self.annual_holding_cost}.')
-        
+            print(
+                f'{Fore.GREEN}EOQ has been set up with annual demand quantity of {Fore.RESET}'
+                + f'{self.annual_demand_quantity}'
+                + Fore.GREEN
+                + ' pieces, fixed cost of the order of '
+                + Fore.RESET
+                + f'{self.order_fixed_cost}'
+                + Fore.GREEN
+                + ' and with the annual holding cost of '
+                + Fore.RESET
+                + f'{self.annual_holding_cost}.'
+            )
+
         import math
         eoq = math.sqrt((((2 * self.annual_demand_quantity) * self.order_fixed_cost) / self.annual_holding_cost))
         eoq = round(eoq, 2)
 
         if filtered == False:
-            print(Fore.GREEN + 'EOQ is:', Fore.RESET, eoq)
+            print(f'{Fore.GREEN}EOQ is:', Fore.RESET, eoq)
 
         return eoq
 
 # CLI application.
 def EOQapp():
-    
+
     '''
     runs as:
 
@@ -131,8 +142,8 @@ def EOQapp():
         * TERMINAL: python -m vandal -e eoq / python -m vandal --entry eoq
     '''
 
-    print(Fore.YELLOW + 'EOQ app is initializing...', Fore.RESET)
-    
+    print(f'{Fore.YELLOW}EOQ app is initializing...', Fore.RESET)
+
     # relevant imports.
     import os
     from vandal.misc._meta import (
@@ -144,8 +155,14 @@ def EOQapp():
 
     # greeting.
     print(Fore.YELLOW + '\n - vandal Command Line Interface Application © David Kundih -', __APPversion__)
-    print(Fore.YELLOW + ' - vandal package version -', 'v',__version__, Fore.RESET, '\n')
-    
+    print(
+        f'{Fore.YELLOW} - vandal package version -',
+        'v',
+        __version__,
+        Fore.RESET,
+        '\n',
+    )
+
     adq = float(input('Enter the annual demand quantity: '))
     ofc = float(input('Enter the fixed cost of the order: '))
     ahc = float(input('Enter the annual holding cost: '))

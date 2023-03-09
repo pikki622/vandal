@@ -108,24 +108,22 @@ class Dijkstra:
 
         if filtered == False:
             print(f'Dijkstra has been set up for for finding the path from {self.origin} => {self.destination}.')
-            
+
         Nodes = self.nodes
         preNode = {}
-        optimal_distance = {}
         output_path = []
 
-        for node in Nodes:
-            optimal_distance[node] = float('inf')
+        optimal_distance = {node: float('inf') for node in Nodes}
         optimal_distance[self.origin] = 0
 
         while Nodes:
             closestNode = None
             for node in Nodes:
-                if closestNode is None:
+                if (
+                    closestNode is None
+                    or optimal_distance[node] < optimal_distance[closestNode]
+                ):
                     closestNode = node
-                elif optimal_distance[node] < optimal_distance[closestNode]:
-                    closestNode = node
-
             for secondaryNode, weight in self.nodes[closestNode].items():
                 if weight + optimal_distance[closestNode] < optimal_distance[secondaryNode]:
                     optimal_distance[secondaryNode] = weight + optimal_distance[closestNode]
@@ -133,7 +131,7 @@ class Dijkstra:
             Nodes.pop(closestNode)
 
         liveNode = self.destination
-        
+
         while liveNode != self.origin:
             try:
                 output_path.insert(0, liveNode)
@@ -145,14 +143,10 @@ class Dijkstra:
 
         if optimal_distance[self.destination] != float('inf'):
             final_path = {'Optimal path' : [output_path], 'Minimal distance' : (optimal_distance[self.destination]),}
-            final_path = pd.DataFrame(final_path, index = ['Output'])
-            final_path = final_path.transpose() 
-
-            return final_path
-
         else:
             final_path = {'Optimal path' : [None], 'Minimal distance' : None,}
-            final_path = pd.DataFrame(final_path, index = ['Output'])
-            final_path = final_path.transpose() 
 
-            return final_path
+        final_path = pd.DataFrame(final_path, index = ['Output'])
+        final_path = final_path.transpose() 
+
+        return final_path

@@ -17,12 +17,12 @@ __APPversion__ = 'v1.26'
 # intro to the application client.
 def greet():
     print(Fore.GREEN + '\n - vandal Command Line Interface Application © David Kundih -', __APPversion__)
-    print(Fore.GREEN + ' - vandal package version - ', __version__, Fore.RESET)
+    print(f'{Fore.GREEN} - vandal package version - ', __version__, Fore.RESET)
 
 # menu.
 def menu():
     print('-----------------------------')
-    print(Fore.CYAN + 'AVAILABLE FEATURES', Fore.RESET)
+    print(f'{Fore.CYAN}AVAILABLE FEATURES', Fore.RESET)
     print(' 1 | Monte Carlo simulation')
     print(' 2 | Dijkstra algorithm')
     print(' 3 | Economic Order Quantity')
@@ -53,10 +53,13 @@ def App():
             print(Fore.GREEN + '=== ENTERING EOQ CLIENT... ===\n', Fore.RESET)
             EOQApp()
         elif choice == '4':
-            print(Fore.GREEN + 'Exiting...', Fore.RESET)
+            print(f'{Fore.GREEN}Exiting...', Fore.RESET)
             break
         else:
-            print(Fore.RED + '=== OPTION NOT EXISTENT OR AVAILABLE, PLEASE WRITE THE EXISTING NUMBER FROM THE MENU TO CONTINUE. ===', Fore.RESET)
+            print(
+                f'{Fore.RED}=== OPTION NOT EXISTENT OR AVAILABLE, PLEASE WRITE THE EXISTING NUMBER FROM THE MENU TO CONTINUE. ===',
+                Fore.RESET,
+            )
 
 # MonteCarlo application client extension.
 def MonteCarloApp():
@@ -72,17 +75,17 @@ def MonteCarloApp():
     file = input('File path: ').replace("'", '"').strip('"')
     if str(file).endswith('.csv'):
         data = pd.read_csv(file)
-        print(Fore.CYAN + 'AVAILABLE COLUMNS: ', Fore.RESET)
+        print(f'{Fore.CYAN}AVAILABLE COLUMNS: ', Fore.RESET)
         for col in data.columns:
             print(col)
     elif str(file).endswith('.xlsx'):
         data = pd.read_excel(file)
-        print(Fore.CYAN + 'AVAILABLE COLUMNS: ', Fore.RESET)
+        print(f'{Fore.CYAN}AVAILABLE COLUMNS: ', Fore.RESET)
         for col in data.columns:
             print(col)
     elif str(file).endswith('.json'):
         data = pd.read_json(file)
-        print(Fore.CYAN + 'AVAILABLE COLUMNS: ', Fore.RESET)
+        print(f'{Fore.CYAN}AVAILABLE COLUMNS: ', Fore.RESET)
         for col in data.columns:
             print(col)
     else:
@@ -122,12 +125,12 @@ def MonteCarloApp():
                 save_to(executed, 'values', choice = file_type)
             except:
                 raise Exception('=== UNABLE TO SAVE, PLEASE RUN THE TERMINAL AS AN ADMINISTRATOR. ===\n')
-        if action == 'stats' or action == 'statistics':
+        if action in ['stats', 'statistics']:
             MC.get_stats()
         if action == 'risk':
             sample = int(input('Number of iterations to measure risk on: ') or 5000)
             MC.get_risk(risk_sims = sample)
-        if action == 'hist' or action == 'histogram':
+        if action in ['hist', 'histogram']:
             x_axis = input('X axis title:')
             y_axis = input('Y axis title:')
             print('1 | Basic Histogram')
@@ -148,17 +151,17 @@ def MonteCarloApp():
 def save_to(file, func_name, choice):
     import pandas as pd
     import os
-    if choice == '1' or choice == 'csv':
+    if choice in ['1', 'csv']:
         extension = '.csv'
-        file.to_csv('vandal.MonteCarlo - ' + func_name + extension)
+        file.to_csv(f'vandal.MonteCarlo - {func_name}{extension}')
         print(os.path.join(os.getcwd() + '\vandal.MonteCarlo - ' + func_name + extension))
-    elif choice == '2' or choice == 'xlsx':
+    elif choice in ['2', 'xlsx']:
         extension = '.xlsx'
-        file.to_excel('vandal.MonteCarlo - ' + func_name + extension)
+        file.to_excel(f'vandal.MonteCarlo - {func_name}{extension}')
         print(os.path.join(os.getcwd() + '\vandal.MonteCarlo - ' + func_name + extension))
-    elif choice == '3' or choice == 'json':
+    elif choice in ['3', 'json']:
         extension = '.json'
-        file.to_json('vandal.MonteCarlo - ' + func_name + extension)
+        file.to_json(f'vandal.MonteCarlo - {func_name}{extension}')
         print(os.path.join(os.getcwd() + '\vandal.MonteCarlo - ' + func_name + extension))
     else:
         print(Fore.RED + '=== NO OPTION CHOSEN, EXITING THE MENU... =\n', Fore.RESET)

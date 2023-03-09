@@ -61,64 +61,37 @@ from vandal.misc._meta import (
 
 # gives a random value of mean and standard deviation inputed, if rounded = 'y', value will be rounded.
 def random_value(mean, st_dev, **rounded):
-        if rounded.get('rounded') == 'y':
-                random_value = round(random.gauss(mean, st_dev))
-        else:
-                random_value = random.gauss(mean, st_dev)
-
-        return random_value
+        return (round(random.gauss(mean, st_dev)) if
+                rounded.get('rounded') == 'y' else random.gauss(mean, st_dev))
 
 # gives random values of mean and standard deviation inputed for the amount of values defined in the pool size, if rounded = 'y', values will be rounded.
 def random_pool(mean, st_dev, pool_size, **rounded):
-        if rounded.get('rounded') == 'y':
-                random_pool = [round(random.gauss(mean, st_dev)) for y in range(pool_size)]
-        else:
-                random_pool = [random.gauss(mean, st_dev) for y in range(pool_size)]
-
-        return random_pool
+        return ([round(random.gauss(mean, st_dev))
+                 for _ in range(pool_size)] if rounded.get('rounded') == 'y'
+                else [random.gauss(mean, st_dev) for _ in range(pool_size)])
 
 # splits the data using a split method character.
 def split_values(data, split_method):
-        split_values = []
-        for i in data:
-                split_values += [i.split(split_method)]
-
-        return split_values
+        return [i.split(split_method) for i in data]
 
 # joins the data using a join metod character.
 def join_values(data, join_method):
-        join_values = []
-        for i in data:
-                join_values += [join_method.join(i)]
-
-        return join_values
+        return [join_method.join(i) for i in data]
 
 # replaces a defined value with a desired value.
 def replace_values(data, replaced_value, replacing_value):
-        replaced_values = []
-        for i in data:
-                replaced_values += [i.split(replaced_value)]
-        replace_values = []
-        for i in replaced_values:
-                replace_values += [replacing_value.join(i)]
-
-        return replace_values
+        replaced_values = [i.split(replaced_value) for i in data]
+        return [replacing_value.join(i) for i in replaced_values]
 
 # manually sorts data depending on defined array of indexes.
 def list_sort(data, array):
-        redefined_data = []
-        for d in array:
-                redefined_data += [data[d]]
-
-        return redefined_data
+        return [data[d] for d in array]
 
 # sorts the indicies in a list of values based on the index array defined as [x,x,x].
 def index_sort(data, split_method, index_array):
-        result = []
         remixed_data = []
         array_count = 0
-        for i in data:
-                result += [i.split(split_method)]
+        result = [i.split(split_method) for i in data]
         array_lenght = len(result)
         for i in result:
                 y1 = [i[x] for x in index_array]
@@ -131,15 +104,9 @@ def index_sort(data, split_method, index_array):
 
 # automatically splits all values in a list and sorts them based on the added trigger as lambda x: [x[i], x[i]] and joins them back together.
 def auto_sort(data, split_method, trigger = lambda x: x[0]):
-        split_values = []
-        merged_final = []
-        for i in data:
-                split_values += [i.split(split_method)]
+        split_values = [i.split(split_method) for i in data]
         auto_sort = sorted(split_values, key = trigger)
-        for i in auto_sort:
-                merged_final += ['-'.join(i)]
-
-        return merged_final
+        return ['-'.join(i) for i in auto_sort]
 
 # creates a random password with adjustable lenght (default: length = 8).
 def create_password(length = 8):
@@ -175,15 +142,15 @@ def file_handler(file):
 
 # file saver for code clarity.
 def save_to(file, prefix, func_name, choice):
-        if choice == '0' or choice == 'csv':
+        if choice in ['0', 'csv']:
                 extension = '.csv'
                 file.to_csv(prefix + func_name + extension)
                 print(Fore.YELLOW + os.path.join(os.getcwd() + '\\' + prefix + func_name + extension) + Fore.RESET)
-        elif choice == '1' or choice == 'xlsx':
+        elif choice in ['1', 'xlsx']:
                 extension = '.xlsx'
                 file.to_excel(prefix + func_name + extension)
                 print(Fore.YELLOW + os.path.join(os.getcwd() + '\\' + prefix + func_name + extension) + Fore.RESET)
-        elif choice == '2' or choice == 'json':
+        elif choice in ['2', 'json']:
                 extension = '.json'
                 file.to_json(prefix + func_name + extension)
                 print(Fore.YELLOW + os.path.join(os.getcwd() + '\\' + prefix + func_name + extension) + Fore.RESET)

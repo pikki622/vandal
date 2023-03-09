@@ -149,9 +149,13 @@ class MonteCarlo:
         '''
 
         if filtered == False:
-            print(Fore.GREEN + f'Monte Carlo has been set up for {self.num_sims} simulations in a period of {self.time_seq} time measurement units and executed.' + Fore.RESET)
-            print(Fore.RED + 'NOTE: Use data with reasonable standard deviation in order to prevent exponential growth of the function that cannot be plotted properly, recognize such abnormal values by a + sign anywhere in the data executed below.' + Fore.RESET)
-        
+            print(
+                f'{Fore.GREEN}Monte Carlo has been set up for {self.num_sims} simulations in a period of {self.time_seq} time measurement units and executed.{Fore.RESET}'
+            )
+            print(
+                f'{Fore.RED}NOTE: Use data with reasonable standard deviation in order to prevent exponential growth of the function that cannot be plotted properly, recognize such abnormal values by a + sign anywhere in the data executed below.{Fore.RESET}'
+            )
+
         import numpy as np
         import pandas as pd
 
@@ -168,28 +172,27 @@ class MonteCarlo:
 
         today_value = self.list_of_values.iloc[self.ref_col]
         data = pd.DataFrame()
-        loading = 0
-
-        for num_sim in range(self.num_sims):
+        for loading, num_sim in enumerate(range(self.num_sims), start=1):
             rand_change = self.list_of_values.pct_change().std()
             count = 0
             index_array = []
             index_array += [today_value + (today_value * np.random.normal(0, rand_change))]
 
-            for num_day in range(self.time_seq):
+            for _ in range(self.time_seq):
                 rand_change = self.list_of_values.pct_change().std()
                 if count == self.time_seq:
                     break
                 index_array += [index_array[count] + (today_value * np.random.normal(0, rand_change))]
                 count += 1
 
-            loading += 1
             print(end = '\r')
             print(loading, 'iterations out of', self.num_sims, 'executed so far', end = '')
 
             data[num_sim] = index_array
         print(end = '\r')
-        print(Fore.GREEN + 'Monte Carlo simulation set up and ready to plot.' + Fore.RESET)
+        print(
+            f'{Fore.GREEN}Monte Carlo simulation set up and ready to plot.{Fore.RESET}'
+        )
         self.results = data
 
         return data
@@ -241,7 +244,7 @@ class MonteCarlo:
         NRisk = len(smaller) / num_sim * 100
         assert (NRisk < 100), '\nTime sequence and/or number of iterations are too low for the proper risk calculation.'
 
-        return str(round(NRisk, 2)) + '%'
+        return f'{str(round(NRisk, 2))}%'
 
     def graph(
         self, 
@@ -273,7 +276,7 @@ class MonteCarlo:
         plt.xlabel(x_title, fontsize = 18, weight = 'semibold')
         plt.ylabel(y_title, fontsize = 18, weight = 'semibold')
         plt.show(block = perform_block)
-        print(Fore.GREEN + 'MonteCarlo() plotting finished.' + Fore.RESET)
+        print(f'{Fore.GREEN}MonteCarlo() plotting finished.{Fore.RESET}')
 
         return
 
@@ -346,17 +349,17 @@ class MonteCarlo:
         if self.time_seq > 50:
             print(Fore.RED + 'NOTE: Time sequence defined greatly impacts the lenght of histogram plotting.\n' + Fore.RESET)
 
-        print(Fore.GREEN + 'Histogram plotting initiated...' + Fore.RESET)
+        print(f'{Fore.GREEN}Histogram plotting initiated...{Fore.RESET}')
         import matplotlib.pyplot as plt
         plt.figure(figsize = plot_size)
         plt.title('vandal (c) David Kundih, 2021-2022', fontsize = 14, weight = 'regular', loc = 'right')
 
         if method.get("method") != "e":
-            print(Fore.GREEN + 'CHOSEN METHOD: Basic histogram model.' + Fore.RESET)
+            print(f'{Fore.GREEN}CHOSEN METHOD: Basic histogram model.{Fore.RESET}')
             plt.suptitle(graph_title, fontsize = 25, weight = 'bold')
 
         if method.get("method") == "e":
-            print(Fore.GREEN + 'CHOSEN METHOD: Empirical rule.' + Fore.RESET)
+            print(f'{Fore.GREEN}CHOSEN METHOD: Empirical rule.{Fore.RESET}')
             plt.suptitle('Value division based on the Empirical rule', fontsize = 25, weight = 'bold')
             plt.axvline(x = std_plus, color = 'g', linestyle = 'dashed')
             plt.axvline(x = std_minus, color = 'r', linestyle = 'dashed')
@@ -366,14 +369,14 @@ class MonteCarlo:
             plt.axvline(x = std_plus3, color = 'g', linestyle = 'dashed')
             plt.axvline(x = std_minus3, color = 'r', linestyle = 'dashed')
 
-        if set_bins == None:
+        if set_bins is None:
             set_bins = self.time_seq
-            
+
         plt.hist(self.results, bins = set_bins, ec = 'm')
         plt.xlabel(x_title, weight = 'semibold')
         plt.ylabel(y_title, weight= 'semibold')
         plt.show(block = perform_block)
-        print(Fore.GREEN + 'Histogram plotting finished.', Fore.RESET)
+        print(f'{Fore.GREEN}Histogram plotting finished.', Fore.RESET)
 
         return
 
@@ -388,8 +391,8 @@ def MCapp():
         * TERMINAL: python -m vandal -e montecarlo / python -m vandal --entry montecarlo
     '''
 
-    print(Fore.YELLOW + 'MonteCarlo app is initializing...', Fore.RESET)
-    
+    print(f'{Fore.YELLOW}MonteCarlo app is initializing...', Fore.RESET)
+
     # relevant imports.
     import os
     import pandas as pd
@@ -406,8 +409,14 @@ def MCapp():
 
     # greeting.
     print(Fore.YELLOW + '\n - vandal Command Line Interface Application © David Kundih -', __APPversion__)
-    print(Fore.YELLOW + ' - vandal package version -', 'v',__version__, Fore.RESET, '\n')
-    print(Fore.YELLOW + 'DATA INPUT OPTIONS', Fore.RESET)
+    print(
+        f'{Fore.YELLOW} - vandal package version -',
+        'v',
+        __version__,
+        Fore.RESET,
+        '\n',
+    )
+    print(f'{Fore.YELLOW}DATA INPUT OPTIONS', Fore.RESET)
     print('0 | Manual input')
     print('1 | File input\n')
 
@@ -445,12 +454,12 @@ def MCapp():
     # simulation parameters and execution.
     simulations = int(input('Enter number of simulations: ') or 100)
     period = int(input('Enter desired period: ') or 50)
-    
+
     MC = MonteCarlo(list_of_values = data, num_sims = simulations, time_seq = period)
     print('')
     executed = MC.execute(filtered = False)
 
-    # options after defining the parameters. 
+    # options after defining the parameters.
     while True:
         action = input('\n>>> ACTIONS: graph, change, values, stats, risk, hist, help, home: ')
 
@@ -466,7 +475,7 @@ def MCapp():
             print('0 | csv')
             print('1 | xlsx')
             print('2 | json')
-            
+
             file_type = input('\nEnter the number or name of file type: ')
             output = MC.get_change()
 
@@ -488,15 +497,19 @@ def MCapp():
             except:
                 raise Exception('=== UNABLE TO SAVE, PLEASE RUN THE TERMINAL AS AN ADMINISTRATOR. ===')
 
-        if action == 'stats' or action == 'statistics':
+        if action in ['stats', 'statistics']:
             print('\n', MC.get_stats())
 
         if action == 'risk':
             sample = int(input('Number of iterations to measure risk on: ') or 5000)
             executed_risk = MC.get_risk(risk_sims = sample)
-            print(Fore.YELLOW + '\nRisk for this option is' + Fore.RESET, executed_risk[:-1], Fore.YELLOW + '%.' + Fore.RESET)
+            print(
+                Fore.YELLOW + '\nRisk for this option is' + Fore.RESET,
+                executed_risk[:-1],
+                f'{Fore.YELLOW}%.{Fore.RESET}',
+            )
 
-        if action == 'hist' or action == 'histogram':
+        if action in ['hist', 'histogram']:
             print('')
             x_axis = input('X axis title:')
             y_axis = input('Y axis title:')
@@ -514,10 +527,10 @@ def MCapp():
                 print(Fore.RED + '=== INVALID METHOD. ===\n', Fore.RESET)
 
         if action == 'home':
-            print(Fore.YELLOW + 'Exiting...', Fore.RESET)
-            
+            print(f'{Fore.YELLOW}Exiting...', Fore.RESET)
+
             break
-        
+
         if action == 'help':
             print(Fore.YELLOW + '\nhttps://github.com/dkundih/vandal', Fore.RESET)
 
