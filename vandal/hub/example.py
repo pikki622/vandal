@@ -20,7 +20,7 @@ def linear_regression(
     deviation: NumberType = 50,
     min_value: NumberType = 1,
 	) -> ReturnType:
-	x = [i for i in range(*x_range)]
+	x = list(range(*x_range))
 	y = [i * y_factor for i in x]
 	y = [random.gauss(i, deviation) for i in y]
 	data = [x, y]
